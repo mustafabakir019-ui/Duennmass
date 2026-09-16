@@ -1,0 +1,80 @@
+---
+interface Props {
+    category: string;
+    title: string;
+    material: string;
+    price: string;
+    colors: string[];
+    image?: string;
+    featured?: boolean;
+}
+
+const {
+    category,
+    title,
+    material,
+    price,
+    colors,
+    image,
+    featured = false
+} = Astro.props;
+---
+
+<article
+    class:list={{
+        "product-card": true,
+        "product-card-featured": featured
+    }}
+    data-category={category.toLowerCase()}
+>
+
+    <a href="#" class="product-image">
+
+        {image ? (
+            <img
+                src={image}
+                alt={`${title} – Maßanzug von Dünnmass`}
+                loading="lazy"
+            />
+        ) : (
+            <div class="image-placeholder">
+                <span>Foto folgt</span>
+            </div>
+        )}
+
+        <span class="product-tag">
+            {category}
+        </span>
+
+        <span class="image-overlay">
+            Details ansehen
+            <span>→</span>
+        </span>
+    </a>
+
+    <div class="product-content">
+
+        <h2>{title}</h2>
+
+        <div class="product-meta">
+            <span>{material}</span>
+            <span>{price}</span>
+        </div>
+
+        <div class="swatches" aria-label="Verfügbare Farben">
+            {colors.map((color) => (
+                <span
+                    class="swatch"
+                    style={`background:${color}`}
+                ></span>
+            ))}
+        </div>
+
+        <a href="#" class="product-link">
+            Details ansehen
+            <span>→</span>
+        </a>
+
+    </div>
+
+</article>

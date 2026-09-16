@@ -1,0 +1,201 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProductCard from "../components/ProductCard.astro";
+
+const outfits = [
+    {
+        category: "Anzug",
+        title: 'Schützenfest-Outfit "Tradition"',
+        material: "Anzug + passende Mütze",
+        price: "ab 1.150 €",
+        colors: ["#1e2a3a", "#2b2b2b"]
+    },
+    {
+        category: "Anzug",
+        title: 'Schützenfest-Anzug "Classic"',
+        material: "Wolle · Maßanfertigung",
+        price: "ab 980 €",
+        colors: ["#1d2630", "#252525"]
+    },
+    {
+        category: "Mütze",
+        title: 'Schützenmütze "Standard"',
+        material: "Samt · Gestickt",
+        price: "ab 180 €",
+        colors: ["#1e2a3a", "#2b2b2b"]
+    },
+    {
+        category: "Mütze",
+        title: 'Schützenmütze "Premium"',
+        material: "Samt · Individuelle Stickerei",
+        price: "ab 240 €",
+        colors: ["#171c24", "#303b4b"]
+    },
+    {
+        category: "Outfit",
+        title: 'Komplett-Outfit "König"',
+        material: "Anzug + Mütze + Details",
+        price: "auf Anfrage",
+        colors: ["#1e2a3a", "#c6a15b"]
+    },
+    {
+        category: "Outfit",
+        title: 'Komplett-Outfit "Tradition"',
+        material: "Individuell zusammengestellt",
+        price: "auf Anfrage",
+        colors: ["#252525", "#51483d"]
+    }
+];
+---
+
+<Layout
+    title="Schützenfest-Anzüge & Mützen | Dünnmass"
+    description="Schützenfest-Anzüge, Schützenmützen und komplette Schützenfest-Outfits von Dünnmass – individuell gefertigt und aufeinander abgestimmt."
+>
+
+    <section class="page-header page-header--fest">
+
+        <div class="page-header-inner">
+
+            <div class="eyebrow">
+                Tradition trifft Maßanfertigung
+            </div>
+
+            <h1>
+                Schützenfest
+            </h1>
+
+            <p>
+                Vom passenden Schützenfest-Anzug bis zur
+                individuell abgestimmten Mütze. Entdecken Sie
+                unsere Auswahl für Ihren nächsten großen Auftritt.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <div class="filters" aria-label="Schützenfest Kategorien">
+
+        <button
+            class="filter-button active"
+            data-filter="alle"
+        >
+            Alle
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="anzug"
+        >
+            Anzüge
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="mütze"
+        >
+            Mützen
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="outfit"
+        >
+            Komplett-Outfits
+        </button>
+
+    </div>
+
+
+    <div class="product-grid">
+
+        {outfits.map((outfit) => (
+            <ProductCard
+                category={outfit.category}
+                title={outfit.title}
+                material={outfit.material}
+                price={outfit.price}
+                colors={outfit.colors}
+            />
+        ))}
+
+    </div>
+
+
+    <section class="split-section">
+
+        <div class="split-image split-image--fest">
+            Schützenfest
+        </div>
+
+        <div class="split-content">
+
+            <div class="eyebrow">
+                Individuell gefertigt
+            </div>
+
+            <h2>
+                Ihr Auftritt.<br />
+                Ihr Outfit.
+            </h2>
+
+            <p>
+                Ein Schützenfest-Outfit lebt von den Details.
+                Anzug, Mütze und die einzelnen Elemente sollen
+                zusammenpassen und gleichzeitig Ihren persönlichen
+                Stil widerspiegeln.
+            </p>
+
+            <a href="/kontakt/" class="button-secondary">
+                Kontakt aufnehmen
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <script>
+        const filterButtons =
+            document.querySelectorAll<HTMLButtonElement>(".filter-button");
+
+        const products =
+            document.querySelectorAll<HTMLElement>(".product-card");
+
+        filterButtons.forEach((button) => {
+
+            button.addEventListener("click", () => {
+
+                const filter =
+                    button.getAttribute("data-filter");
+
+                filterButtons.forEach((item) => {
+                    item.classList.remove("active");
+                });
+
+                button.classList.add("active");
+
+                products.forEach((product) => {
+
+                    const category =
+                        product.getAttribute("data-category");
+
+                    if (
+                        filter === "alle" ||
+                        category === filter
+                    ) {
+                        product.style.display = "";
+                    } else {
+                        product.style.display = "none";
+                    }
+
+                });
+
+            });
+
+        });
+    </script>
+
+</Layout>

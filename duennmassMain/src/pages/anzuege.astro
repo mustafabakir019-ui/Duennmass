@@ -1,0 +1,183 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProductCard from "../components/ProductCard.astro";
+
+const suits = [
+    {
+        category: "Business",
+        title: "Der Klassiker",
+        material: "Wolle · Zweireiher",
+        price: "ab 890 €",
+        colors: ["#2b2b2b", "#3a4356", "#4a4038"]
+    },
+    {
+        category: "Hochzeit",
+        title: "Bräutigam Elegance",
+        material: "Leinen · Slim Fit",
+        price: "ab 990 €",
+        colors: ["#e8ddc9", "#c6a15b"]
+    },
+    {
+        category: "Casual",
+        title: "Weekend Blazer",
+        material: "Baumwollmix",
+        price: "ab 420 €",
+        colors: ["#4a4038", "#7a7266"]
+    },
+    {
+        category: "Damen",
+        title: "Business-Blazer",
+        material: "Wolle · Tailliert",
+        price: "ab 650 €",
+        colors: ["#2b2b2b", "#5a2f34"]
+    },
+    {
+        category: "Herren",
+        title: "Modern Tailoring",
+        material: "Wolle · Modern Fit",
+        price: "ab 920 €",
+        colors: ["#252a31", "#343a40", "#51483d"]
+    },
+    {
+        category: "Business",
+        title: "Executive",
+        material: "Wolle · Premium",
+        price: "ab 1.090 €",
+        colors: ["#1d2025", "#343d4d"]
+    }
+];
+---
+
+<Layout
+    title="Maßgeschneiderte Anzüge | Dünnmass"
+    description="Entdecken Sie maßgeschneiderte Anzüge von Dünnmass – Business, Hochzeit, Casual und individuelle Anfertigungen für Damen und Herren."
+>
+
+    <section class="page-header page-header--suits">
+
+        <div class="page-header-inner">
+
+            <div class="eyebrow">
+                Unsere Kollektion
+            </div>
+
+            <h1>
+                Maßgeschneiderte Anzüge
+            </h1>
+
+            <p>
+                Von klassischer Business-Mode bis zum individuellen
+                Hochzeitsanzug. Entdecken Sie unsere verschiedenen
+                Stilrichtungen und finden Sie die passende Richtung
+                für Ihren persönlichen Look.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <div class="filters" aria-label="Anzug-Kategorien">
+
+        <button
+            class="filter-button active"
+            data-filter="alle"
+        >
+            Alle
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="business"
+        >
+            Business
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="hochzeit"
+        >
+            Hochzeit
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="casual"
+        >
+            Casual
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="damen"
+        >
+            Damen
+        </button>
+
+        <button
+            class="filter-button"
+            data-filter="herren"
+        >
+            Herren
+        </button>
+
+    </div>
+
+
+    <div class="product-grid" id="product-grid">
+
+        {suits.map((suit) => (
+            <ProductCard
+                category={suit.category}
+                title={suit.title}
+                material={suit.material}
+                price={suit.price}
+                colors={suit.colors}
+            />
+        ))}
+
+    </div>
+
+
+    <script>
+        const filterButtons =
+            document.querySelectorAll<HTMLButtonElement>(".filter-button");
+
+        const products =
+            document.querySelectorAll<HTMLElement>(".product-card");
+
+        filterButtons.forEach((button) => {
+
+            button.addEventListener("click", () => {
+
+                const filter =
+                    button.getAttribute("data-filter");
+
+                filterButtons.forEach((item) => {
+                    item.classList.remove("active");
+                });
+
+                button.classList.add("active");
+
+                products.forEach((product) => {
+
+                    const category =
+                        product.getAttribute("data-category");
+
+                    if (
+                        filter === "alle" ||
+                        category === filter
+                    ) {
+                        product.style.display = "";
+                    } else {
+                        product.style.display = "none";
+                    }
+
+                });
+
+            });
+
+        });
+    </script>
+
+</Layout>

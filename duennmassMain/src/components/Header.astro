@@ -1,0 +1,78 @@
+---
+const phoneDisplay = "TELEFONNUMMER";
+const phoneLink = "TELEFONNUMMER";
+---
+
+<header class="site-header">
+    <div class="header-inner">
+
+        <a href="/" class="logo-link" aria-label="Dünnmass Startseite">
+            <img
+                src="https://duennmass.com/logo-nobg-white.webp"
+                alt="Dünnmass"
+                class="logo"
+            />
+        </a>
+
+        <nav class="main-nav" aria-label="Hauptnavigation">
+            <a href="/" class:list={{ active: Astro.url.pathname === "/" }}>
+                Home
+            </a>
+
+            <a
+                href="/anzuege/"
+                class:list={{ active: Astro.url.pathname.startsWith("/anzuege") }}
+            >
+                Anzüge
+            </a>
+
+            <a
+                href="/schuetzenfest/"
+                class:list={{ active: Astro.url.pathname.startsWith("/schuetzenfest") }}
+            >
+                Schützenfest
+            </a>
+
+            <a
+                href="/kontakt/"
+                class:list={{ active: Astro.url.pathname.startsWith("/kontakt") }}
+            >
+                Kontakt
+            </a>
+        </nav>
+
+        <a
+            class="phone-button"
+            href={`tel:${phoneLink}`}
+            aria-label={`Dünnmass anrufen: ${phoneDisplay}`}
+        >
+            <span class="phone-icon">＋</span>
+            <span>{phoneDisplay}</span>
+        </a>
+
+        <button
+            class="mobile-menu-button"
+            aria-label="Menü öffnen"
+            aria-expanded="false"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+    </div>
+</header>
+
+<script>
+    const button = document.querySelector(".mobile-menu-button");
+    const nav = document.querySelector(".main-nav");
+
+    button?.addEventListener("click", () => {
+        const isOpen = nav?.classList.toggle("mobile-open");
+
+        button.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+        );
+    });
+</script>
