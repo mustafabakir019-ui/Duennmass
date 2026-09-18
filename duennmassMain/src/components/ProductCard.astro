@@ -7,6 +7,8 @@ interface Props {
     colors: string[];
     image?: string;
     featured?: boolean;
+    description?: string;
+    details?: string[];
 }
 
 const {
@@ -16,8 +18,25 @@ const {
     price,
     colors,
     image,
-    featured = false
+    featured = false,
+    description = "Individuell auf Ihren Stil abgestimmt – mit hochwertiger Verarbeitung, einem modernen Schnitt und persönlicher Beratung.",
+    details = [
+        "Individuell auf Ihren Stil angepasst",
+        "Hochwertige Materialien und Verarbeitung",
+        "Persönliche Beratung inklusive"
+    ]
 } = Astro.props;
+
+const productData = encodeURIComponent(JSON.stringify({
+    category,
+    title,
+    material,
+    price,
+    colors,
+    image: image || "",
+    description,
+    details
+}));
 ---
 
 <article
@@ -28,29 +47,36 @@ const {
     data-category={category.toLowerCase()}
 >
 
-    <a href="#" class="product-image">
+    <button
+        type="button"
+        class="product-card-button"
+        data-open-product
+        data-product={productData}
+        aria-label={`Produktdetails für ${title} öffnen`}
+    >
+        <div class="product-image">
+            {image ? (
+                <img
+                    src={image}
+                    alt={`${title} – Maßanzug von Dünnmass`}
+                    loading="lazy"
+                />
+            ) : (
+                <div class="image-placeholder">
+                    <span>Foto folgt</span>
+                </div>
+            )}
 
-        {image ? (
-            <img
-                src={image}
-                alt={`${title} – Maßanzug von Dünnmass`}
-                loading="lazy"
-            />
-        ) : (
-            <div class="image-placeholder">
-                <span>Foto folgt</span>
-            </div>
-        )}
+            <span class="product-tag">
+                {category}
+            </span>
 
-        <span class="product-tag">
-            {category}
-        </span>
-
-        <span class="image-overlay">
-            Details ansehen
-            <span>→</span>
-        </span>
-    </a>
+            <span class="image-overlay">
+                Details ansehen
+                <span>→</span>
+            </span>
+        </div>
+    </button>
 
     <div class="product-content">
 
@@ -70,10 +96,16 @@ const {
             ))}
         </div>
 
-        <a href="#" class="product-link">
+        <button
+            type="button"
+            class="product-link"
+            data-open-product
+            data-product={productData}
+            aria-label={`Details zu ${title} anzeigen`}
+        >
             Details ansehen
             <span>→</span>
-        </a>
+        </button>
 
     </div>
 

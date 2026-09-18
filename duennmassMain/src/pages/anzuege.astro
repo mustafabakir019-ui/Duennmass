@@ -8,42 +8,78 @@ const suits = [
         title: "Der Klassiker",
         material: "Wolle · Zweireiher",
         price: "ab 890 €",
-        colors: ["#2b2b2b", "#3a4356", "#4a4038"]
+        colors: ["#2b2b2b", "#3a4356", "#4a4038"],
+        description: "Ein zeitloser Zweireiher mit sauberem Schnitt, robuster Stoffqualität und viel Eleganz für anspruchsvolle Business-Auftritte.",
+        details: [
+            "Perfekte Passform dank individueller Maßanpassung",
+            "Premium-Wolle mit hoher Tragekomfort- und Formstabilität",
+            "Ideal für Meetings, Events und elegante Alltagslooks"
+        ]
     },
     {
         category: "Hochzeit",
         title: "Bräutigam Elegance",
         material: "Leinen · Slim Fit",
         price: "ab 990 €",
-        colors: ["#e8ddc9", "#c6a15b"]
+        colors: ["#e8ddc9", "#c6a15b"],
+        description: "Dieser Hochzeitsanzug verbindet leichten Leinen-Look mit modernem Slim Fit und wirkt zugleich festlich und entspannt.",
+        details: [
+            "Leichtes Material für Komfort über den ganzen Tag",
+            "Moderne Silhouette mit klassischem Hochzeitscharakter",
+            "Mit individuelles Styling und Accessoires abgestimmt"
+        ]
     },
     {
         category: "Casual",
         title: "Weekend Blazer",
         material: "Baumwollmix",
         price: "ab 420 €",
-        colors: ["#4a4038", "#7a7266"]
+        colors: ["#4a4038", "#7a7266"],
+        description: "Ein entspannter Blazer für den Alltag: vielseitig kombinierbar, modern und trotzdem hochwertig verarbeitet.",
+        details: [
+            "Vielseitig kombinierbar mit Hemd, Polo oder Knit",
+            "Atmungsaktiver Baumwollmix für alle Tage",
+            "Moderne Passform mit hochwertigem Finish"
+        ]
     },
     {
         category: "Damen",
         title: "Business-Blazer",
         material: "Wolle · Tailliert",
         price: "ab 650 €",
-        colors: ["#2b2b2b", "#5a2f34"]
+        colors: ["#2b2b2b", "#5a2f34"],
+        description: "Ein taillierter Blazer mit klarer Linie, perfekt für anspruchsvolle Business- und Abendlooks mit Persönlichkeit.",
+        details: [
+            "Taillierte Silhouette für eine klare, elegante Form",
+            "Hochwertige Wollmischung mit anspruchsvollem Stil",
+            "Passend für Beruf, Events und besondere Anlässe"
+        ]
     },
     {
         category: "Herren",
         title: "Modern Tailoring",
         material: "Wolle · Modern Fit",
         price: "ab 920 €",
-        colors: ["#252a31", "#343a40", "#51483d"]
+        colors: ["#252a31", "#343a40", "#51483d"],
+        description: "Ein moderner Anzug mit sauberem Schnitt, hochwertiger Stoffwahl und subtilen Details für eine starke Präsenz.",
+        details: [
+            "Zeitgemäße Silhouette ohne Kompromisse bei Schnitt",
+            "Premium-Wolle für ein edles Finish und lange Haltbarkeit",
+            "Perfekt für anspruchsvollen Alltag und besondere Termine"
+        ]
     },
     {
         category: "Business",
         title: "Executive",
         material: "Wolle · Premium",
         price: "ab 1.090 €",
-        colors: ["#1d2025", "#343d4d"]
+        colors: ["#1d2025", "#343d4d"],
+        description: "Der Executive steht für Charakter, Qualität und klare Linien – ideal für Projekte, Vorstellungsgespräche oder feine Anlässe.",
+        details: [
+            "Premium-Wolle mit hochwertigem Griff und Fall",
+            "Präzise Maßarbeit für einen starken Gesamteindruck",
+            "Für besondere Anlässe mit besonderem Anspruch"
+        ]
     }
 ];
 ---
@@ -133,50 +169,184 @@ const suits = [
                 material={suit.material}
                 price={suit.price}
                 colors={suit.colors}
+                description={suit.description}
+                details={suit.details}
             />
         ))}
 
     </div>
 
+    <div class="product-panel-backdrop" data-state="closed" aria-hidden="true">
+        <aside
+            class="product-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="product-panel-title"
+            aria-hidden="true"
+        >
+            <button type="button" class="product-panel-close" aria-label="Detailansicht schließen">
+                ×
+            </button>
+
+            <div class="product-panel-media">
+                <img src="" alt="" data-panel-image />
+            </div>
+
+            <div class="product-panel-body">
+                <span class="product-panel-tag" data-panel-category></span>
+                <h2 id="product-panel-title" data-panel-title></h2>
+
+                <div class="product-panel-meta">
+                    <span data-panel-material></span>
+                    <span data-panel-price></span>
+                </div>
+
+                <div class="product-panel-swatches" data-panel-swatches></div>
+
+                <p data-panel-description></p>
+
+                <ul class="product-panel-list" data-panel-details></ul>
+
+                <div class="product-panel-actions">
+                    <a href="/kontakt/" class="button-primary">Beratung anfragen</a>
+                    <button type="button" class="button-secondary product-panel-close-button">
+                        Schließen
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
 
     <script>
+        type ProductData = {
+            category?: string;
+            title?: string;
+            material?: string;
+            price?: string;
+            description?: string;
+            image?: string;
+            colors?: string[];
+            details?: string[];
+        };
+
         const filterButtons =
             document.querySelectorAll<HTMLButtonElement>(".filter-button");
 
         const products =
             document.querySelectorAll<HTMLElement>(".product-card");
 
-        filterButtons.forEach((button) => {
-
+        filterButtons.forEach((button: HTMLButtonElement) => {
             button.addEventListener("click", () => {
+                const filter = button.getAttribute("data-filter");
 
-                const filter =
-                    button.getAttribute("data-filter");
-
-                filterButtons.forEach((item) => {
+                filterButtons.forEach((item: HTMLButtonElement) => {
                     item.classList.remove("active");
                 });
 
                 button.classList.add("active");
 
-                products.forEach((product) => {
+                products.forEach((product: HTMLElement) => {
+                    const category = product.getAttribute("data-category");
 
-                    const category =
-                        product.getAttribute("data-category");
-
-                    if (
-                        filter === "alle" ||
-                        category === filter
-                    ) {
+                    if (filter === "alle" || category === filter) {
                         product.style.display = "";
                     } else {
                         product.style.display = "none";
                     }
-
                 });
-
             });
+        });
 
+        const backdrop = document.querySelector<HTMLElement>(".product-panel-backdrop");
+        const panel = document.querySelector<HTMLElement>(".product-panel");
+        const closeButtons = document.querySelectorAll<HTMLButtonElement>(".product-panel-close, .product-panel-close-button");
+        const panelImage = document.querySelector<HTMLImageElement>("[data-panel-image]");
+        const panelCategory = document.querySelector<HTMLElement>("[data-panel-category]");
+        const panelTitle = document.querySelector<HTMLElement>("[data-panel-title]");
+        const panelMaterial = document.querySelector<HTMLElement>("[data-panel-material]");
+        const panelPrice = document.querySelector<HTMLElement>("[data-panel-price]");
+        const panelDescription = document.querySelector<HTMLElement>("[data-panel-description]");
+        const panelDetails = document.querySelector<HTMLUListElement>("[data-panel-details]");
+        const panelSwatches = document.querySelector<HTMLElement>("[data-panel-swatches]");
+
+        const closePanel = (): void => {
+            if (!backdrop || !panel) return;
+
+            backdrop.dataset.state = "closed";
+            backdrop.setAttribute("aria-hidden", "true");
+            panel.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("panel-open");
+        };
+
+        const openPanel = (product: ProductData): void => {
+            if (!backdrop || !panel) return;
+
+            const image = product.image || "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1200&q=80";
+
+            if (panelImage) {
+                panelImage.src = image;
+                panelImage.alt = `${product.title || "Produkt"} – Detailansicht`;
+            }
+
+            if (panelCategory) panelCategory.textContent = product.category || "";
+            if (panelTitle) panelTitle.textContent = product.title || "";
+            if (panelMaterial) panelMaterial.textContent = product.material || "";
+            if (panelPrice) panelPrice.textContent = product.price || "";
+            if (panelDescription) panelDescription.textContent = product.description || "";
+
+            if (panelSwatches) {
+                panelSwatches.innerHTML = "";
+                (product.colors || []).forEach((color: string) => {
+                    const swatch = document.createElement("span");
+                    swatch.className = "swatch";
+                    swatch.style.background = color;
+                    swatch.title = color;
+                    panelSwatches.appendChild(swatch);
+                });
+            }
+
+            if (panelDetails) {
+                panelDetails.innerHTML = "";
+                (product.details || []).forEach((item: string) => {
+                    const bullet = document.createElement("li");
+                    bullet.textContent = item;
+                    panelDetails.appendChild(bullet);
+                });
+            }
+
+            backdrop.dataset.state = "open";
+            backdrop.setAttribute("aria-hidden", "false");
+            panel.setAttribute("aria-hidden", "false");
+            document.body.classList.add("panel-open");
+        };
+
+        document.querySelectorAll<HTMLElement>("[data-open-product]").forEach((trigger: HTMLElement) => {
+            trigger.addEventListener("click", () => {
+                const rawProduct = trigger.getAttribute("data-product") || "{}";
+                const product = JSON.parse(decodeURIComponent(rawProduct)) as ProductData;
+                if (product && product.title) {
+                    openPanel(product);
+                }
+            });
+        });
+
+        closeButtons.forEach((button: HTMLButtonElement) => {
+            button.addEventListener("click", closePanel);
+        });
+
+        if (backdrop) {
+            backdrop.addEventListener("click", (event: MouseEvent) => {
+                if (event.target === backdrop) {
+                    closePanel();
+                }
+            });
+        }
+
+        document.addEventListener("keydown", (event: KeyboardEvent) => {
+            if (event.key === "Escape" && backdrop && backdrop.dataset.state === "open") {
+                closePanel();
+            }
         });
     </script>
 

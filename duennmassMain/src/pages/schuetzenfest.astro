@@ -8,42 +8,78 @@ const outfits = [
         title: 'Schützenfest-Outfit "Tradition"',
         material: "Anzug + passende Mütze",
         price: "ab 1.150 €",
-        colors: ["#1e2a3a", "#2b2b2b"]
+        colors: ["#1e2a3a", "#2b2b2b"],
+        description: "Ein traditionsreiches Schützenfest-Outfit mit klarer Form, edler Stoffwahl und einem starken, unverwechselbaren Auftritt.",
+        details: [
+            "Individuell zugeschnitten auf Ihre Körpergröße und Typologie",
+            "Hohe Qualität mit robustem, stilistischem Charakter",
+            "Perfekt abgestimmt auf Festtag, Parade und Gruppenauftritt"
+        ]
     },
     {
         category: "Anzug",
         title: 'Schützenfest-Anzug "Classic"',
         material: "Wolle · Maßanfertigung",
         price: "ab 980 €",
-        colors: ["#1d2630", "#252525"]
+        colors: ["#1d2630", "#252525"],
+        description: "Ein klassischer Schützenfest-Anzug mit moderner Passform und traditioneller Atmosphäre – elegant, ruhig und klar in der Linie.",
+        details: [
+            "Klassische Farb- und Stoffauswahl für den Festtag",
+            "Schnitt mit Balance aus Tradition und Gegenwart",
+            "Individuelle Beratung für den perfekten Gesamtauftritt"
+        ]
     },
     {
         category: "Mütze",
         title: 'Schützenmütze "Standard"',
         material: "Samt · Gestickt",
         price: "ab 180 €",
-        colors: ["#1e2a3a", "#2b2b2b"]
+        colors: ["#1e2a3a", "#2b2b2b"],
+        description: "Die Standard-Schützenmütze verbindet traditionalen Charme mit hochwertigem Samt und klaren, gestickten Details.",
+        details: [
+            "Passform mit festlichem Charakter und angenehmem Tragekomfort",
+            "Hochwertiger Samt mit deutlich sichtbar gestickten Details",
+            "Ergänzt Anzüge und komplette Outfits stilvoll"
+        ]
     },
     {
         category: "Mütze",
         title: 'Schützenmütze "Premium"',
         material: "Samt · Individuelle Stickerei",
         price: "ab 240 €",
-        colors: ["#171c24", "#303b4b"]
+        colors: ["#171c24", "#303b4b"],
+        description: "Mit individueller Stickerei und hochwertigem Material wird die Premium-Mütze zum persönlichen Highlight Ihres Festlooks.",
+        details: [
+            "Individuelle Stickereien und Farbgestaltung möglich",
+            "Premium-Samt für eine edle Oberfläche und bessere Haptik",
+            "Besonders geeignet für besondere Anlässe und Gruppenauftritte"
+        ]
     },
     {
         category: "Outfit",
         title: 'Komplett-Outfit "König"',
         material: "Anzug + Mütze + Details",
         price: "auf Anfrage",
-        colors: ["#1e2a3a", "#c6a15b"]
+        colors: ["#1e2a3a", "#c6a15b"],
+        description: "Ein ausgewogenes Gesamtoutfit mit traditioneller Ausstrahlung, hoher Qualität und klaren, prägenden Details.",
+        details: [
+            "Komplette Kombination aus Anzug, Mütze und Accessoires",
+            "Persönliche Abstimmung aller Elemente zu einem Gesamtlook",
+            "Ideal für besondere Auftritte mit hohem Anspruch"
+        ]
     },
     {
         category: "Outfit",
         title: 'Komplett-Outfit "Tradition"',
         material: "Individuell zusammengestellt",
         price: "auf Anfrage",
-        colors: ["#252525", "#51483d"]
+        colors: ["#252525", "#51483d"],
+        description: "Ein maßgeschneidertes Schützenfest-Outfit mit traditioneller Linienführung und passender, klarer Farbgestaltung.",
+        details: [
+            "Zusammenstellung aus Anzug, Mütze und Accessoires nach Wunsch",
+            "Traditionelle Optik mit individueller, moderner Präzision",
+            "Perfekt abgestimmt auf Tradition, Anlass und Persönlichkeit"
+        ]
     }
 ];
 ---
@@ -118,9 +154,52 @@ const outfits = [
                 material={outfit.material}
                 price={outfit.price}
                 colors={outfit.colors}
+                description={outfit.description}
+                details={outfit.details}
             />
         ))}
 
+    </div>
+
+    <div class="product-panel-backdrop" data-state="closed" aria-hidden="true">
+        <aside
+            class="product-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="product-panel-title"
+            aria-hidden="true"
+        >
+            <button type="button" class="product-panel-close" aria-label="Detailansicht schließen">
+                ×
+            </button>
+
+            <div class="product-panel-media">
+                <img src="" alt="" data-panel-image />
+            </div>
+
+            <div class="product-panel-body">
+                <span class="product-panel-tag" data-panel-category></span>
+                <h2 id="product-panel-title" data-panel-title></h2>
+
+                <div class="product-panel-meta">
+                    <span data-panel-material></span>
+                    <span data-panel-price></span>
+                </div>
+
+                <div class="product-panel-swatches" data-panel-swatches></div>
+
+                <p data-panel-description></p>
+
+                <ul class="product-panel-list" data-panel-details></ul>
+
+                <div class="product-panel-actions">
+                    <a href="/kontakt/" class="button-primary">Beratung anfragen</a>
+                    <button type="button" class="button-secondary product-panel-close-button">
+                        Schließen
+                    </button>
+                </div>
+            </div>
+        </aside>
     </div>
 
 
@@ -158,43 +237,134 @@ const outfits = [
 
 
     <script>
+        type ProductData = {
+            category?: string;
+            title?: string;
+            material?: string;
+            price?: string;
+            description?: string;
+            image?: string;
+            colors?: string[];
+            details?: string[];
+        };
+
         const filterButtons =
             document.querySelectorAll<HTMLButtonElement>(".filter-button");
 
         const products =
             document.querySelectorAll<HTMLElement>(".product-card");
 
-        filterButtons.forEach((button) => {
-
+        filterButtons.forEach((button: HTMLButtonElement) => {
             button.addEventListener("click", () => {
+                const filter = button.getAttribute("data-filter");
 
-                const filter =
-                    button.getAttribute("data-filter");
-
-                filterButtons.forEach((item) => {
+                filterButtons.forEach((item: HTMLButtonElement) => {
                     item.classList.remove("active");
                 });
 
                 button.classList.add("active");
 
-                products.forEach((product) => {
+                products.forEach((product: HTMLElement) => {
+                    const category = product.getAttribute("data-category");
 
-                    const category =
-                        product.getAttribute("data-category");
-
-                    if (
-                        filter === "alle" ||
-                        category === filter
-                    ) {
+                    if (filter === "alle" || category === filter) {
                         product.style.display = "";
                     } else {
                         product.style.display = "none";
                     }
-
                 });
-
             });
+        });
 
+        const backdrop = document.querySelector<HTMLElement>(".product-panel-backdrop");
+        const panel = document.querySelector<HTMLElement>(".product-panel");
+        const closeButtons = document.querySelectorAll<HTMLButtonElement>(".product-panel-close, .product-panel-close-button");
+        const panelImage = document.querySelector<HTMLImageElement>("[data-panel-image]");
+        const panelCategory = document.querySelector<HTMLElement>("[data-panel-category]");
+        const panelTitle = document.querySelector<HTMLElement>("[data-panel-title]");
+        const panelMaterial = document.querySelector<HTMLElement>("[data-panel-material]");
+        const panelPrice = document.querySelector<HTMLElement>("[data-panel-price]");
+        const panelDescription = document.querySelector<HTMLElement>("[data-panel-description]");
+        const panelDetails = document.querySelector<HTMLUListElement>("[data-panel-details]");
+        const panelSwatches = document.querySelector<HTMLElement>("[data-panel-swatches]");
+
+        const closePanel = (): void => {
+            if (!backdrop || !panel) return;
+
+            backdrop.dataset.state = "closed";
+            backdrop.setAttribute("aria-hidden", "true");
+            panel.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("panel-open");
+        };
+
+        const openPanel = (product: ProductData): void => {
+            if (!backdrop || !panel) return;
+
+            const image = product.image || "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=1200&q=80";
+
+            if (panelImage) {
+                panelImage.src = image;
+                panelImage.alt = `${product.title || "Produkt"} – Detailansicht`;
+            }
+
+            if (panelCategory) panelCategory.textContent = product.category || "";
+            if (panelTitle) panelTitle.textContent = product.title || "";
+            if (panelMaterial) panelMaterial.textContent = product.material || "";
+            if (panelPrice) panelPrice.textContent = product.price || "";
+            if (panelDescription) panelDescription.textContent = product.description || "";
+
+            if (panelSwatches) {
+                panelSwatches.innerHTML = "";
+                (product.colors || []).forEach((color: string) => {
+                    const swatch = document.createElement("span");
+                    swatch.className = "swatch";
+                    swatch.style.background = color;
+                    swatch.title = color;
+                    panelSwatches.appendChild(swatch);
+                });
+            }
+
+            if (panelDetails) {
+                panelDetails.innerHTML = "";
+                (product.details || []).forEach((item: string) => {
+                    const bullet = document.createElement("li");
+                    bullet.textContent = item;
+                    panelDetails.appendChild(bullet);
+                });
+            }
+
+            backdrop.dataset.state = "open";
+            backdrop.setAttribute("aria-hidden", "false");
+            panel.setAttribute("aria-hidden", "false");
+            document.body.classList.add("panel-open");
+        };
+
+        document.querySelectorAll<HTMLElement>("[data-open-product]").forEach((trigger: HTMLElement) => {
+            trigger.addEventListener("click", () => {
+                const rawProduct = trigger.getAttribute("data-product") || "{}";
+                const product = JSON.parse(decodeURIComponent(rawProduct)) as ProductData;
+                if (product && product.title) {
+                    openPanel(product);
+                }
+            });
+        });
+
+        closeButtons.forEach((button: HTMLButtonElement) => {
+            button.addEventListener("click", closePanel);
+        });
+
+        if (backdrop) {
+            backdrop.addEventListener("click", (event: MouseEvent) => {
+                if (event.target === backdrop) {
+                    closePanel();
+                }
+            });
+        }
+
+        document.addEventListener("keydown", (event: KeyboardEvent) => {
+            if (event.key === "Escape" && backdrop && backdrop.dataset.state === "open") {
+                closePanel();
+            }
         });
     </script>
 
